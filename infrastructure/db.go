@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/bj-budhathoki/golang-api/model"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -24,7 +25,7 @@ func SetupDatabase() *gorm.DB {
 	if err != nil {
 		panic("Fail to connect database")
 	}
-	// db.AutoMigrate()
+	db.AutoMigrate(&model.User{}, &model.Book{})
 	return db
 }
 

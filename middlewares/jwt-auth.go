@@ -10,12 +10,13 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func Authorize(jwtService services.JWTService) gin.HandlerFunc {
+func AuthorizeJWT(jwtService services.JWTService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.GetHeader("Authorization")
 		if authHeader == "" {
 			response := utils.BuildErrorResponse("Failed to process request", "No token found", nil)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
 		}
 		token, err := jwtService.ValidateToken(authHeader)
 		if token.Valid {
