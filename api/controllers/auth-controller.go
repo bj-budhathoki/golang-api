@@ -31,8 +31,8 @@ func (c *authController) Login(ctx *gin.Context) {
 	errDTO := ctx.ShouldBind(&loginDTO)
 	if errDTO != nil {
 		response := utils.BuildErrorResponse("Failed to process request", errDTO.Error(), utils.EmptyObj{})
-		ctx.JSON(http.StatusBadRequest, response)
-
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
 	}
 	authResult := c.authService.VerfiyCredential(loginDTO.Email, loginDTO.Password)
 	if v, ok := authResult.(model.User); ok {
@@ -44,10 +44,25 @@ func (c *authController) Login(ctx *gin.Context) {
 	}
 	response := utils.BuildErrorResponse("Please check your credentail", "Invalid credentail", utils.EmptyObj{})
 	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+
 }
 
 func (c *authController) Register(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "hello resister",
-	})
+	var resiterDTOS dtos.RegisterDTOS
+	errDTO := ctx.ShouldBind(&resiterDTOS)
+	if errDTO != nil {
+		response := utils.BuildErrorResponse("Failed to process request", errDTO.Error(), utils.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+	if !c.authService.IsDuplicateEmail(resiterDTOS.Email) {
+		response := utils.BuildErrorResponse("Fail to process request", "Duplicate email", utils.EmptyObj{})
+		ctx.JSON(http.StatusConflict, response)
+	} else {
+		newUser := c.authService.CreateUser(dtos.UserCreateDTOS(resiterDTOS))
+		token := c.jwtService.GenerateToken(strconv.FormatUint(newUser.ID, 10))
+		newUser.Token = token
+		response := utils.BuildResponse(true, "OK", newUser)
+		ctx.JSON(http.StatusCreated, response)
+	}
 }
