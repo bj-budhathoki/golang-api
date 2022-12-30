@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/bj-budhathoki/golang-api/services"
+	"github.com/bj-budhathoki/golang-api/api/services"
 	"github.com/bj-budhathoki/golang-api/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
