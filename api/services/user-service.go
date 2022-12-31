@@ -37,5 +37,3 @@ func (s *userService) Update(user dtos.UserUpdateDTOS) model.User {
 func (s *userService) Profile(userID string) model.User {
 	return s.userRepository.ProfileUser(userID)
 }
-
-// athena
