@@ -26,6 +26,17 @@ func NewAuthController(authService services.AuthService, jwtService services.JWT
 		jwtService:  jwtService,
 	}
 }
+
+// @BasePath /api/v1
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {object} utils.Response
+// @Router /auth/login [post]
 func (c *authController) Login(ctx *gin.Context) {
 	var loginDTO dtos.LoginDTOS
 	errDTO := ctx.ShouldBind(&loginDTO)
@@ -44,9 +55,18 @@ func (c *authController) Login(ctx *gin.Context) {
 	}
 	response := utils.BuildErrorResponse("Please check your credentail", "Invalid credentail", utils.EmptyObj{})
 	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
-
 }
 
+// @BasePath /api/v1
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 201 {object} utils.Response
+// @Router /auth/register [post]
 func (c *authController) Register(ctx *gin.Context) {
 	var resiterDTOS dtos.RegisterDTOS
 	errDTO := ctx.ShouldBind(&resiterDTOS)

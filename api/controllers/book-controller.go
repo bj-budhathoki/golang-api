@@ -84,6 +84,16 @@ func (c *bookController) UpdateBook(ctx *gin.Context) {
 	}
 }
 
+// @BasePath /api/
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {array} []model.Book
+// @Router /api/v1/books [get]
 func (c *bookController) AllBook(ctx *gin.Context) {
 	var books []model.Book = c.bookService.AllBook()
 	res := utils.BuildResponse(true, "OK", books)
