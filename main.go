@@ -1,6 +1,9 @@
 package main
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/bj-budhathoki/golang-api/api/controllers"
 	"github.com/bj-budhathoki/golang-api/api/repository"
 	"github.com/bj-budhathoki/golang-api/api/services"
@@ -38,12 +41,20 @@ var (
 // @host      localhost:8080
 // @BasePath  /api
 // @securityDefinitions.basic  BasicAuth
+
 func main() {
 	defer infrastructure.CloseDatabaseConnection(db)
+	startTime := time.Now()
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	v1 := r.Group("/api/v1")
 	{
+		v1.GET("health-check", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusOK, gin.H{
+				"status": "OK",
+				"uptime": time.Since(startTime),
+			})
+		})
 		authRoutes := v1.Group("/auth")
 		{
 			authRoutes.POST("/login", authController.Login)
